@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aegis Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <div class="brand-mark">A</div>
+          <div>
+            <h1>Aegis</h1>
+            <p>Self-defending DeepBook execution</p>
+          </div>
+        </div>
+        <div class="topbar-status">
+          <span class="status-pill"><span class="status-dot"></span>Testnet ready</span>
+          <span class="status-pill">One PTB</span>
+          <span class="status-pill">DeepBook V3</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="control-panel" aria-label="Intent controls">
+          <section class="panel-section">
+            <div class="section-heading">
+              <span>Intent</span>
+              <strong id="intentSummary">BUY 750 SUI</strong>
+            </div>
+
+            <label class="field">
+              <span>Pair</span>
+              <select id="pair">
+                <option value="SUI_DBUSDC">SUI_DBUSDC</option>
+                <option value="DEEP_DBUSDC">DEEP_DBUSDC</option>
+                <option value="DBUSDT_DBUSDC">DBUSDT_DBUSDC</option>
+              </select>
+            </label>
+
+            <div class="field">
+              <span>Direction</span>
+              <div class="segment" data-field="side">
+                <button type="button" class="active" data-value="buy">Buy</button>
+                <button type="button" data-value="sell">Sell</button>
+              </div>
+            </div>
+
+            <label class="field range-field">
+              <span>Size</span>
+              <div class="range-row">
+                <input id="quantity" type="range" min="100" max="2000" step="25" value="750" />
+                <input id="quantityNumber" type="number" min="100" max="2000" step="25" value="750" />
+              </div>
+            </label>
+
+            <label class="field range-field">
+              <span>Max slippage</span>
+              <div class="range-row">
+                <input id="slippage" type="range" min="15" max="150" step="5" value="80" />
+                <input id="slippageNumber" type="number" min="15" max="150" step="5" value="80" />
+              </div>
+            </label>
+
+            <div class="field">
+              <span>Urgency</span>
+              <div class="segment" data-field="urgency">
+                <button type="button" data-value="patient">Patient</button>
+                <button type="button" class="active" data-value="normal">Normal</button>
+                <button type="button" data-value="fast">Fast</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading">
+              <span>Market</span>
+              <strong id="scenarioLabel">Toxic</strong>
+            </div>
+            <div class="segment three" data-field="scenario">
+              <button type="button" data-value="calm">Calm</button>
+              <button type="button" data-value="stressed">Stressed</button>
+              <button type="button" class="active" data-value="toxic">Toxic</button>
+            </div>
+          </section>
+
+          <div class="actions">
+            <button id="runButton" class="primary-button" type="button">Run Duel</button>
+            <button id="resetButton" class="ghost-button" type="button">Reset</button>
+          </div>
+        </aside>
+
+        <section class="main-stage" aria-label="Aegis execution dashboard">
+          <div class="metrics-grid">
+            <article class="metric">
+              <span>Risk</span>
+              <strong id="riskScore">85%</strong>
+              <small id="riskLabel">hostile</small>
+            </article>
+            <article class="metric">
+              <span>Slices</span>
+              <strong id="sliceCount">10</strong>
+              <small id="bandLabel">69 bps band</small>
+            </article>
+            <article class="metric accent">
+              <span>Saved</span>
+              <strong id="savedBps">181 bps</strong>
+              <small id="savedQuote">20 quote</small>
+            </article>
+            <article class="metric">
+              <span>PTB</span>
+              <strong id="ptbCommands">10</strong>
+              <small>atomic commands</small>
+            </article>
+          </div>
+
+          <div class="stage-grid">
+            <section class="analysis-panel">
+              <div class="section-heading">
+                <span>Risk Engine</span>
+                <strong id="midPrice">1.4940</strong>
+              </div>
+              <div id="signals" class="signals"></div>
+            </section>
+
+            <section class="analysis-panel">
+              <div class="section-heading">
+                <span>Duel Result</span>
+                <strong id="deltaBps">+181 bps</strong>
+              </div>
+              <div class="duel-bars">
+                <div class="duel-row">
+                  <div>
+                    <span>Naive order</span>
+                    <strong id="naiveSlip">244 bps</strong>
+                  </div>
+                  <div class="bar-track"><div id="naiveBar" class="bar-fill danger"></div></div>
+                </div>
+                <div class="duel-row">
+                  <div>
+                    <span>Aegis PTB</span>
+                    <strong id="aegisSlip">64 bps</strong>
+                  </div>
+                  <div class="bar-track"><div id="aegisBar" class="bar-fill safe"></div></div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <section class="book-panel">
+            <div class="section-heading">
+              <span>Order Book And Grid</span>
+              <strong id="bookPair">SUI_DBUSDC</strong>
+            </div>
+            <canvas id="bookCanvas" width="1200" height="360" aria-label="Order book visualization"></canvas>
+          </section>
+
+          <section class="grid-panel">
+            <div class="section-heading">
+              <span>Atomic Child Orders</span>
+              <strong id="cadenceLabel">refresh 1.5s</strong>
+            </div>
+            <div class="orders-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Side</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Client ID</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersBody"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

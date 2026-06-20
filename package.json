@@ -1,0 +1,23 @@
+{
+  "name": "aegis-self-defending-order",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Intent-based execution and liquidity protection for DeepBook V3 on Sui.",
+  "scripts": {
+    "demo": "node engine/src/cli/demo.js",
+    "test": "node --test engine/test/*.test.js",
+    "serve": "python3 server.py",
+    "deepbook:plan": "node engine/src/cli/deepbookPlan.js",
+    "deepbook:setup": "node engine/src/cli/setupBalanceManager.js",
+    "deepbook:execute": "node engine/src/cli/executeDeepbookGrid.js"
+  },
+  "dependencies": {
+    "@mysten/deepbook-v3": "latest",
+    "@mysten/sui": "latest",
+    "dotenv": "^16.4.7"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
